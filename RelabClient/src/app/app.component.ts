@@ -37,9 +37,9 @@ export class AppComponent implements AfterViewInit {
  //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i dati 
   //dal server
   ngOnInit() { 
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("http://127.0.0.1:5000//ci_vettore/50");
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("http://127.0.0.1:5000//ci_vettore/90");
     this.obsGeoData.subscribe(this.prepareData);
-    this.obsCiVett = this.http.get<Ci_vettore[]>("http://127.0.0.1:5000//ci_vettore/140");
+    this.obsCiVett = this.http.get<Ci_vettore[]>("http://127.0.0.1:5000//ci_vettore/101");
     this.obsCiVett.subscribe(this.prepareCiVettData);
   }
 
@@ -68,7 +68,13 @@ export class AppComponent implements AfterViewInit {
     if (label.includes("elettrica")) {
       return { url: './assets/img/electricity.ico', scaledSize: new google.maps.Size(32,32) };
     }
+    if (label.includes("GPL")) {
+      return { url: './assets/img/gpl.png', scaledSize: new google.maps.Size(32,32) };
+    }
+    if (label.includes("Gasolio e olio combustibile")) {
+      return { url: 'RelabClient/src/assets/img/oil.png', scaledSize: new google.maps.Size(32,32) };
+    }
     //Se non viene riconosciuta nessuna etichetta ritorna l'icona undefined
-      return {url: './assets/img/undefined.ico' , scaledSize: new google.maps.Size(32,32)}
+      return {url: './assets/img/question.png' , scaledSize: new google.maps.Size(32,32)}
   }
 }
