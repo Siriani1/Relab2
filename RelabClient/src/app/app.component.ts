@@ -5,6 +5,7 @@ import { GoogleMap } from '@angular/google-maps'
 import { Observable } from 'rxjs';
 import {  GeoFeatureCollection } from './models/geojson.model';
 import { Ci_vettore } from './models/ci_vett.model';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,14 @@ import { Ci_vettore } from './models/ci_vett.model';
 })
 export class AppComponent implements AfterViewInit {
   title = 'server mappe';
+  foglio: 0;
+  
+  Cpagina(pagina): void {
+    console.log(pagina.value)
+    this.foglio = pagina.value
+    this.obsCiVett = this.http.get<Ci_vettore[]>("http://127.0.0.1:5000//ci_vettore/" + this.foglio);
+    this.obsCiVett.subscribe(this.prepareCiVettData);
+  }
   //Variabile che conterrà i nostri oggetti GeoJson
   geoJsonObject : GeoFeatureCollection;
   //Observable per richiedere al server python i dati sul DB
@@ -37,10 +46,9 @@ export class AppComponent implements AfterViewInit {
  //Una volta che la pagina web è caricata, viene lanciato il metodo ngOnInit scarico i dati 
   //dal server
   ngOnInit() { 
-    this.obsGeoData = this.http.get<GeoFeatureCollection>("http://127.0.0.1:5000//ci_vettore/90");
+    this.obsGeoData = this.http.get<GeoFeatureCollection>("http://127.0.0.1:5000//ci_vettore/" + this.foglio);
     this.obsGeoData.subscribe(this.prepareData);
-    this.obsCiVett = this.http.get<Ci_vettore[]>("http://127.0.0.1:5000//ci_vettore/101");
-    this.obsCiVett.subscribe(this.prepareCiVettData);
+    
   }
 
   obsCiVett : Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
