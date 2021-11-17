@@ -54,19 +54,38 @@ export class AppComponent implements AfterViewInit {
   obsCiVett : Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
   markerList : google.maps.MarkerOptions[]
 
-  prepareCiVettData = (data: Ci_vettore[]) =>
-  {
+  prepareCiVettData = (data: Ci_vettore[]) => {
     console.log(data); //Verifica di ricevere i vettori energetici
     this.markerList = []; //NB: markers va dichiarata tra le proprietà markers : Marker[]
     for (const iterator of data) { //Per ogni oggetto del vettore creo un Marker
-      let m : google.maps.MarkerOptions = 
+      let m: google.maps.MarkerOptions =
       {
-       position : new google.maps.LatLng (iterator.WGS84_X, iterator.WGS84_Y),
-       icon : this.findImage(iterator.CI_VETTORE)
+        position: new google.maps.LatLng(iterator.WGS84_X, iterator.WGS84_Y),
+        icon : this.findImage(iterator.CI_VETTORE)
       }
       //Marker(iterator.WGS84_X,iterator.WGS84_Y,iterator.CI_VETTORE);
       this.markerList.push(m);
     }
+    this.center = this.LatLngMedia(data);
+  }
+  
+  LatLngMedia(data: Ci_vettore[]): google.maps.LatLngLiteral {
+    let sommaLat = 0; //Uso queste due variabili per calcolare latitudine e longitudine media
+    let sommaLng = 0;
+    let f = 0
+    
+    for (var iterator of data) {
+      f += 1
+      sommaLat += Number(iterator.WGS84_X); //Sommo tutte le latitutidini e longitudini
+      sommaLng += Number(iterator.WGS84_Y);
+    }
+
+    console.log(sommaLat / f)
+    console.log(sommaLng / f)
+
+    return { lat: sommaLat / f, lng: sommaLng / f};
+    //TODO : IMPLEMENTA IL METODO CHE CALCOLA LATITUDINE E LONGITUDINE MEDIA
+    //NOTA: IL CAMPO WGS84_X contiene la latitudine
   }
 
   findImage(label: string) : google.maps.Icon {
