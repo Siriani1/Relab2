@@ -15,6 +15,8 @@ import { Input } from '@angular/core';
 export class AppComponent implements AfterViewInit {
   title = 'server mappe';
   foglio: 0;
+  circleOptions: google.maps.CircleOptions;
+  
   
   Cpagina(pagina): void {
     console.log(pagina.value)
@@ -28,7 +30,7 @@ export class AppComponent implements AfterViewInit {
   obsGeoData: Observable<GeoFeatureCollection>;
   // Centriamo la mappa
   center: google.maps.LatLngLiteral = { lat: 45.506738, lng: 9.190766 };
-  zoom = 8;
+  zoom = 12;
 
   constructor(public http: HttpClient) {
     //Facciamo iniettare il modulo HttpClient dal framework Angular (ricordati di importare la libreria)
@@ -48,7 +50,7 @@ export class AppComponent implements AfterViewInit {
   ngOnInit() { 
     this.obsGeoData = this.http.get<GeoFeatureCollection>("http://127.0.0.1:5000//ci_vettore/" + this.foglio);
     this.obsGeoData.subscribe(this.prepareData);
-    
+    this.circleOptions = { fillColor: 'red', clickable: true, editable: true, radius: 200, visible : false }
   }
 
   obsCiVett : Observable<Ci_vettore[]>; //Crea un observable per ricevere i vettori energetici
@@ -103,5 +105,15 @@ export class AppComponent implements AfterViewInit {
     }
     //Se non viene riconosciuta nessuna etichetta ritorna l'icona undefined
       return {url: './assets/img/question.png' , scaledSize: new google.maps.Size(32,32)}
+  }
+
+  circleCenter: google.maps.LatLngLiteral;
+  //Aggiungi il gestore del metodo mapClicked
+  mapClicked($event: google.maps.MapMouseEvent) {
+    console.log($event);
+    let coords= $event.latLng; //Queste sono le coordinate cliccate
+    this.center = { lat: coords.lat(), lng: coords.lng() };
+    this.circleCenter = { lat: coords.lat(), lng: coords.lng()}
+    this.circleOptions = { fillColor: 'red', clickable: true, editable: true, radius: 200, visible : true }
   }
 }

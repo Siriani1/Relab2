@@ -1,7 +1,9 @@
-{{title}}
+<p>Inserisci pagina che vuoi vedere:</p>
 <input type="email" name="pagina" #pagina> 
 <button (click)="Cpagina(pagina)">invia</button>
-<google-map  #mapRef [center]="center" [zoom]="zoom" [width]="1000">  
+<br>
+<google-map (mapClick)="mapClicked($event)" #mapRef [center]="center" [zoom]="zoom" [width]="1000">  
     <map-marker *ngFor="let markerOption of markerList" [options] = "markerOption">
     </map-marker>
+    <map-circle [center]="circleCenter" [options]="circleOptions"></map-circle>
 </google-map>
