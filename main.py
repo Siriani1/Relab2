@@ -57,6 +57,31 @@ def get_vettore(foglio):
         )
     return jsonify(output) #Nota che abbiamo eliminato la chiave result perchè i dati sono già formattati
 
+@app.route('/ci_geovettore/<float:lng>/<float:lat>/<float:r>', methods=['GET'])
+def get_vettore_coord(lng, lat, r):
+    mil4326WKT = mongo.db.mil4326WKT
+    output = []
+    query = {
+        '$and':
+        [
+            {'WGS84_X': {'$gt': lng - r}},
+            {'WGS84_X': {'$lt': lng + r}},
+            {'WGS84_Y': {'$gt': lat - r}},
+            {'WGS84_Y': {'$lt': lat + r}}
+        ]
+    }
+    for s in mil4326WKT.find(query):
+        output.append({
+            "INDIRIZZO": s['INDIRIZZO'],
+            "WGS84_X": s["WGS84_X"],
+            "WGS84_Y": s["WGS84_Y"],
+            "CLASSE_ENE": s["CLASSE_ENE"],
+            "EP_H_ND": s["EP_H_ND"],
+            "FOGLIO": s["FOGLIO"],
+            "CI_VETTORE": s['CI_VETTORE']
+        }
+        )
+    return jsonify(output)
 # Checks to see if the name of the package is the run as the main package.
 if __name__ == "__main__":
     # Runs the Flask application only if the main.py file is being run.

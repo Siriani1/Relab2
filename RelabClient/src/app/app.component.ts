@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit } from '@angular/core';
 import { Component, ViewChild } from '@angular/core';
-import { GoogleMap } from '@angular/google-maps'
+import { GoogleMap, MapCircle } from '@angular/google-maps'
 import { Observable } from 'rxjs';
 import {  GeoFeatureCollection } from './models/geojson.model';
 import { Ci_vettore } from './models/ci_vett.model';
@@ -16,6 +16,7 @@ export class AppComponent implements AfterViewInit {
   title = 'server mappe';
   foglio: 0;
   circleOptions: google.maps.CircleOptions;
+  
   
   
   Cpagina(pagina): void {
@@ -107,6 +108,9 @@ export class AppComponent implements AfterViewInit {
       return {url: './assets/img/question.png' , scaledSize: new google.maps.Size(32,32)}
   }
 
+  @ViewChild(MapCircle) circleRef: MapCircle;
+
+
   circleCenter: google.maps.LatLngLiteral;
   //Aggiungi il gestore del metodo mapClicked
   mapClicked($event: google.maps.MapMouseEvent) {
@@ -114,6 +118,12 @@ export class AppComponent implements AfterViewInit {
     let coords= $event.latLng; //Queste sono le coordinate cliccate
     this.center = { lat: coords.lat(), lng: coords.lng() };
     this.circleCenter = { lat: coords.lat(), lng: coords.lng()}
-    this.circleOptions = { fillColor: 'red', clickable: true, editable: true, radius: 200, visible : true }
+    this.circleOptions = { fillColor: 'red', clickable: true, editable: true, radius: 200, visible : true}
+  }
+
+  circleRightClicked($event: google.maps.MapMouseEvent) {
+    console.log((this.circleRef.getRadius() * 0.00001)/1.1132);
+    console.log(this.circleRef.getCenter());
+    this.circleRef.circle?.setVisible(false);
   }
 }

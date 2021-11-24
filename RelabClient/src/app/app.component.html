@@ -5,5 +5,5 @@
 <google-map (mapClick)="mapClicked($event)" #mapRef [center]="center" [zoom]="zoom" [width]="1000">  
     <map-marker *ngFor="let markerOption of markerList" [options] = "markerOption">
     </map-marker>
-    <map-circle [center]="circleCenter" [options]="circleOptions"></map-circle>
+    <map-circle #circleRef [center]="circleCenter" [options]="circleOptions" (circleRightclick) ="circleRightClicked($event)"></map-circle>
 </google-map>
